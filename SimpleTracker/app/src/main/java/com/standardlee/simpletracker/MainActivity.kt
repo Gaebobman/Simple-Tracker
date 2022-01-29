@@ -28,11 +28,16 @@ class MainActivity : AppCompatActivity() {
             ).show()
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
-
-        val networkStatsManager = applicationContext.getSystemService(NETWORK_STATS_SERVICE) as NetworkStatsManager
-        val packageManager = applicationContext.packageManager
-        val trackingHelper = TrackingHelper(networkStatsManager, packageManager)
-        trackingHelper.getDataUsageForASingleApp()
+        CoroutineScope(Dispatchers.IO).launch {
+            val networkStatsManager =
+                applicationContext.getSystemService(NETWORK_STATS_SERVICE) as NetworkStatsManager
+            val packageManager = applicationContext.packageManager
+            val trackingHelper = TrackingHelper(networkStatsManager, packageManager)
+            trackingHelper.setPackageInfoList()
+            trackingHelper.setDailyDataUsageForAllApp()
+            trackingHelper.setWeeklyDataUsageForAllApp()
+            trackingHelper.setMonthlyDataUsageForAllApp()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +53,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-
-
-
-
-
